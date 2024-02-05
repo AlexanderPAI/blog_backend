@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from posts.models import Post
+from posts.models import IsRead, Post
 
 
 class PostAdmin(admin.ModelAdmin):
@@ -11,4 +11,12 @@ class PostAdmin(admin.ModelAdmin):
     readonly_fields = ('pub_date',)
 
 
+class IsReadAdmin(admin.ModelAdmin):
+    list_display = (
+        'user',
+        'post',
+    )
+
+
 admin.site.register(Post, PostAdmin)
+admin.site.register(IsRead, IsReadAdmin)
