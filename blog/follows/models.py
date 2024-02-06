@@ -27,6 +27,8 @@ class Follow(models.Model):
                 name='unique_follow',
             ),
         )
+        verbose_name = 'Подписка',
+        verbose_name_plural = 'Подписки'
 
     def __str__(self):
-        return f'Подписка f{self.user.username} -> f{self.author.username}'
+        return f'Подписка {self.user.username} -> {self.author.username}'
