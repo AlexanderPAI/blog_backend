@@ -53,3 +53,4 @@ class FollowSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 'The user cannot subscribe to his blog'
             )
+        return value
