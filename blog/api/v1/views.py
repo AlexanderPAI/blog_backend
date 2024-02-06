@@ -1,8 +1,7 @@
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.viewsets import ModelViewSet
 
 from api.v1.serializers import FollowSerializer, PostSerializer
-
-from follows.models import Follow
 from posts.models import Post
 
 
@@ -30,6 +29,7 @@ class FollowViewSet(ModelViewSet):
 class FeedViewSet(ModelViewSet):
     """Представление для ленты новостей."""
     serializer_class = PostSerializer
+    pagination_class = PageNumberPagination
 
     def get_queryset(self):
         return Post.objects.filter(author__following__user=self.request.user)
