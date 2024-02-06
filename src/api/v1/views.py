@@ -9,6 +9,7 @@ class PostViewSet(ModelViewSet):
     """Представление для постов."""
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+    pagination_class = None
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
@@ -17,6 +18,7 @@ class PostViewSet(ModelViewSet):
 class FollowViewSet(ModelViewSet):
     """Представление для подписок."""
     serializer_class = FollowSerializer
+    pagination_class = None
 
     def get_queryset(self):
         user = self.request.user
