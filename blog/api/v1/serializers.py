@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from posts.models import IsRead, Post
+from posts.models import Post
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -18,4 +18,6 @@ class PostSerializer(serializers.ModelSerializer):
         user = self.context.get('request').user
         if user.is_anonymous:
             return False
-        return obj.is_read.filter(user=user)
+        if obj.is_read.filter(user=user):
+            return True
+        return False
