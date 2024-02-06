@@ -24,7 +24,7 @@ class PostAdmin(admin.ModelAdmin):
     @admin.display(description='Прочитан')
     def is_read(self, obj):
         """Метод для отображения статуса поста 'Прочитан/не прочитан' в админ-панели."""
-        if obj.is_read.filter(user=self.request.user, post=obj):
+        if obj.is_read.filter(user=self.request.user):
             return 'Да'
         return 'Нет'
 
