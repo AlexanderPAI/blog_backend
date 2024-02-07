@@ -1,0 +1,102 @@
+version: '3.9'
+
+services:
+  db:
+    container_name: "db"
+    image: postgres:15.0-alpine
+    volumes:
+      - db_volume:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_DB=blog_backend
+    env_file:
+      - ./src/blog/.env
+    ports:
+      - "5432:5432"
+    restart: always
+
+  blog_backend:
+    container_name: "blog_backend"
+    build:
+      context: .
+    restart: always
+    volumes:
+      - static_value:/app/src/static/
+    depends_on:
+      - db
+    env_file:
+      - ./src/blog/.env
+    command: >
+      sh -c "cd ./src &&
+             python manage.py collectstatic --no-input &&
+             python manage.py migrate &&
+             gunicorn blog.wsgi:application --bind 0:8000"
+
+  nginx:
+    container_name: "nginx"
+    image: nginx:1.25.3-alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - static_value:/var/html/static
+    depends_on:
+      - blog_backend
+
+  redis:
+    container_name: "redis"
+    image: redis
+    restart: always
+    hostname: redis
+
+  worker:
+    container_name: "worker"
+    build:
+      context: .
+    hostname: worker
+    env_file:
+      - ./src/blog/.env
+    command: >
+      sh -c "cd ./src &&
+             celery -A celery_app.app worker --loglevel=info &&
+             celery -A celery_app.app beat --loglevel=info"
+    links:
+      - redis
+    depends_on:
+      - redis
+      - db
+
+  celery-beat:
+    container_name: "celery-beat"
+    build:
+      context: .
+    hostname: worker
+    env_file:
+      - ./src/blog/.env
+    command: >
+      sh -c "cd ./src &&
+             celery -A celery_app.app beat --loglevel=info"
+    links:
+      - redis
+    depends_on:
+      - redis
+      - db
+
+
+  flower:
+    container_name: "flower"
+    build:
+      context: .
+    hostname: flower
+    command: >
+      sh -c "cd ./src &&
+             celery -A celery_app.app flower"
+    links:
+      - redis
+    depends_on:
+      - redis
+    ports:
+      - "5555:5555"
+
+volumes:
+  db_volume:
+  static_value:
