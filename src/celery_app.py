@@ -15,7 +15,7 @@ app.autodiscover_tasks()
 app.conf.beat_schedule = {
     'every': {
         'task': 'posts.tasks.repeat_send_mail',
-        'schedule': crontab(minute='*/2')
+        'schedule': crontab(minute='0', hour=0)
     },
 }
 
