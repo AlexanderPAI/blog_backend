@@ -57,12 +57,30 @@ services:
       - ./src/blog/.env
     command: >
       sh -c "cd ./src &&
-             celery -A celery_app.app worker --loglevel=info"
+             celery -A celery_app.app worker --loglevel=info &&
+             celery -A celery_app.app beat --loglevel=info"
     links:
       - redis
     depends_on:
       - redis
       - db
+
+  celery-beat:
+    container_name: "celery-beat"
+    build:
+      context: .
+    hostname: worker
+    env_file:
+      - ./src/blog/.env
+    command: >
+      sh -c "cd ./src &&
+             celery -A celery_app.app beat --loglevel=info"
+    links:
+      - redis
+    depends_on:
+      - redis
+      - db
+
 
   flower:
     container_name: "flower"

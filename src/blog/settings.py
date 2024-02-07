@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'follows',
     'posts',
     'services',
+    'django_celery_beat',
 ]
 
 MIDDLEWARE = [
@@ -145,3 +146,6 @@ REST_FRAMEWORK = {
 }
 
 CELERY_BROKER_URL = 'redis://redis:6379/0'
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
