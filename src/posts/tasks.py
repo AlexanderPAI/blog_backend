@@ -1,7 +1,6 @@
-from celery_app import app
-
 from django.contrib.auth.models import User
 
+from celery_app import app
 from posts.send_mail import get_last_posts_feed, send
 
 

@@ -1,11 +1,10 @@
-from django.db import transaction
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
+from django.db import transaction
 
 from follows.models import Follow
 from posts.models import IsRead, Post
-
-from services.factories import PostFactory, IsReadFactory, FollowFactory
+from services.factories import FollowFactory, IsReadFactory, PostFactory
 
 NUM_USERS = 100
 NUM_FOLLOWS = 500
