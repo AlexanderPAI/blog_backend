@@ -31,6 +31,10 @@ class PostViewSet(ModelViewSet):
         post = get_object_or_404(Post, pk=pk)
 
         if request.method == 'POST':
+            if IsRead.objects.filter(user=user, post=post).exists():
+                return Response(
+                    {f'Пост {post.title}': 'уже был отмечен прочитанным ранее'}
+                )
             IsRead.objects.create(user=user, post=post)
             return Response(
                 {f'Пост: {post.title}': 'отмечен прочитаным'}
