@@ -16,7 +16,8 @@ services:
 
   blog_backend:
     container_name: "blog_backend"
-    build: .
+    build:
+      context: .
     restart: always
     volumes:
       - static_value:/app/src/static/
@@ -40,6 +41,26 @@ services:
       - static_value:/var/html/static
     depends_on:
       - blog_backend
+
+  redis:
+    container_name: "redis"
+    image: redis
+    restart: always
+    hostname: redis
+
+  worker:
+    container_name: "worker"
+    build:
+      context: .
+    hostname: worker
+#    entrypoint: celery
+    command: >
+      sh -c "cd ./src &&
+             celery -A celery_app.app worker --loglevel=info"
+    links:
+      - redis
+    depends_on:
+      - redis
 
 volumes:
   db_volume:
