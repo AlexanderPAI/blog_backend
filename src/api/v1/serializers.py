@@ -6,7 +6,7 @@ from posts.models import Post
 
 
 class PostSerializer(serializers.ModelSerializer):
-    """Сериализатор модели Post."""
+    """Сериализатор модели постов."""
     author = serializers.StringRelatedField()
     is_read = serializers.SerializerMethodField()
 
@@ -26,6 +26,7 @@ class PostSerializer(serializers.ModelSerializer):
 
 
 class FollowSerializer(serializers.ModelSerializer):
+    """Сериализатор подписок."""
     user = serializers.SlugRelatedField(
         slug_field='username',
         read_only=True,
@@ -48,6 +49,7 @@ class FollowSerializer(serializers.ModelSerializer):
         )
 
     def validate_author(self, value):
+        """Валидация уникальности пары Пользователь - Автор."""
         user = self.context.get('request').user
         if user == value:
             raise serializers.ValidationError(

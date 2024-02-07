@@ -9,6 +9,7 @@ from posts.models import IsRead, Post
 
 
 class UserFactory(DjangoModelFactory):
+    """Генератор тестовых пользователей."""
     class Meta:
         model = User
 
@@ -18,6 +19,7 @@ class UserFactory(DjangoModelFactory):
 
 
 class PostFactory(DjangoModelFactory):
+    """Генератор тестовых постов."""
     class Meta:
         model = Post
 
@@ -36,6 +38,7 @@ class PostFactory(DjangoModelFactory):
 
 
 class IsReadFactory(DjangoModelFactory):
+    """Генератор статутов постов 'Прочитан.'"""
     user = factory.Iterator(User.objects.all())
     post = factory.Iterator(Post.objects.all())
 
@@ -44,6 +47,7 @@ class IsReadFactory(DjangoModelFactory):
 
 
 class FollowFactory(DjangoModelFactory):
+    """Генератор подписок."""
     user = factory.SubFactory(UserFactory)
     author = factory.SubFactory(UserFactory)
 

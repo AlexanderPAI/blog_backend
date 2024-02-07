@@ -1,8 +1,12 @@
+from django.shortcuts import get_object_or_404
+
+from rest_framework.decorators import action
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet
 
 from api.v1.serializers import FollowSerializer, PostSerializer
-from posts.models import Post
+from posts.models import IsRead, Post
 
 
 class PostViewSet(ModelViewSet):
@@ -13,6 +17,30 @@ class PostViewSet(ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(author=self.request.user)
+
+    @action(
+        methods=['post', 'delete'],
+        detail=True
+    )
+    def is_read(self, request, pk):
+        """
+        Эндпоинт posts/{id}/is_read -
+        изменить статус прочитан/не прочитан.
+        """
+        user = request.user
+        post = get_object_or_404(Post, pk=pk)
+
+        if request.method == 'POST':
+            IsRead.objects.create(user=user, post=post)
+            return Response(
+                {f'Пост: {post.title}': 'отмечен прочитаным'}
+            )
+
+        if request.method == 'DELETE':
+            is_read = get_object_or_404(IsRead, user=user, post=post)
+            is_read.delete()
+            return Response(status=204)
+        return Response(status=405)
 
 
 class FollowViewSet(ModelViewSet):

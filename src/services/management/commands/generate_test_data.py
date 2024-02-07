@@ -1,4 +1,3 @@
-import random
 from django.db import transaction
 from django.contrib.auth.models import User
 from django.core.management.base import BaseCommand
@@ -6,7 +5,7 @@ from django.core.management.base import BaseCommand
 from follows.models import Follow
 from posts.models import IsRead, Post
 
-from services.factories import UserFactory, PostFactory, IsReadFactory, FollowFactory
+from services.factories import PostFactory, IsReadFactory, FollowFactory
 
 NUM_USERS = 100
 NUM_FOLLOWS = 500
@@ -15,6 +14,7 @@ NUM_ISREAD = 1000
 
 
 class Command(BaseCommand):
+    """Команда manage.py для генерации тестовых данных."""
     @transaction.atomic
     def handle(self, *args, **options):
         models = [User, Post, Follow, IsRead]
@@ -32,7 +32,6 @@ class Command(BaseCommand):
         for _ in range(NUM_POSTS):
             post = PostFactory()
             print(post.title)
-
 
 
         for _ in range(NUM_ISREAD):

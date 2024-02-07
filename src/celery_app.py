@@ -19,6 +19,7 @@ app.conf.beat_schedule = {
     },
 }
 
+
 @app.task()
 def debug_task():
     time.sleep(20)
