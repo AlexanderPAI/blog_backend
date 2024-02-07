@@ -13,11 +13,15 @@ class UserFactory(DjangoModelFactory):
         model = User
 
     username = factory.Sequence(lambda n: 'user%d' % n)
+    email = factory.LazyAttribute(lambda n: '{0}@test.com'.format(n.username).lower())
     is_staff = 'True'
 
 
 class PostFactory(DjangoModelFactory):
-    author = factory.SubFactory(UserFactory)
+    class Meta:
+        model = Post
+
+    author = factory.Iterator(User.objects.all())
 
     title = factory.Faker(
         "sentence",
@@ -26,17 +30,14 @@ class PostFactory(DjangoModelFactory):
     )
     text = factory.Faker(
         "sentence",
-        nb_words=5,
+        nb_words=10,
         variable_nb_words=True,
     )
 
-    class Meta:
-        model = Post
-
 
 class IsReadFactory(DjangoModelFactory):
-    user = factory.SubFactory(UserFactory)
-    post = factory.SubFactory(PostFactory)
+    user = factory.Iterator(User.objects.all())
+    post = factory.Iterator(Post.objects.all())
 
     class Meta:
         model = IsRead

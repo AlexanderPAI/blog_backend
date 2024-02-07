@@ -8,10 +8,10 @@ from posts.models import IsRead, Post
 
 from services.factories import UserFactory, PostFactory, IsReadFactory, FollowFactory
 
-NUM_USERS = 1000
-NUM_FOLLOWS = 200
-NUM_POSTS = 5000
-NUM_ISREAD = 500
+NUM_USERS = 100
+NUM_FOLLOWS = 500
+NUM_POSTS = 10000
+NUM_ISREAD = 1000
 
 
 class Command(BaseCommand):
@@ -21,17 +21,19 @@ class Command(BaseCommand):
         for m in models:
             m.objects.all().delete()
 
-        for _ in range(NUM_USERS):
-            user = UserFactory()
-            print(user.username)
+        for _ in range(NUM_FOLLOWS):
+            follow = FollowFactory()
+            print(follow.user.username, follow.author.username)
+
+        # for _ in range(NUM_USERS):
+        #     user = UserFactory()
+        #     print(user.username)
 
         for _ in range(NUM_POSTS):
             post = PostFactory()
             print(post.title)
 
-        for _ in range(NUM_FOLLOWS):
-            follow = FollowFactory()
-            print(follow.user.username, follow.author.username)
+
 
         for _ in range(NUM_ISREAD):
             isread = IsReadFactory()
