@@ -62,6 +62,21 @@ services:
     depends_on:
       - redis
 
+  flower:
+    container_name: "flower"
+    build:
+      context: .
+    hostname: flower
+    command: >
+      sh -c "cd ./src &&
+             celery -A celery_app.app flower"
+    links:
+      - redis
+    depends_on:
+      - redis
+    ports:
+      - "5555:5555"
+
 volumes:
   db_volume:
   static_value:
